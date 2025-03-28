@@ -1,1 +1,1 @@
-### Plataforma para mostrar el uso de un DBContext personalizado para el trabajo con órdenes de servicio, permite la importación de endpoints para el manejo de las operaciones CRUD sobre las entidades bases.
+## Project that showcases the use of a custom DBContext for working with service orders, allowing the import of endpoints for handling CRUD operations on base entities.
