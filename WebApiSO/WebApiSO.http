@@ -1,0 +1,6 @@
+@WebApiSO_HostAddress = http://localhost:5296
+
+GET {{WebApiSO_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
