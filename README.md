@@ -12,4 +12,31 @@
 - Docker deployment using https with custom cert.
 - etc...
 
+## Run Locally
+
+Clone the project
+
+```bash
+  git clone https://github.com/potlitel/TestingServiceOrderDBContext.git
+```
+
+Go to the project directory
+
+```bash
+  cd TestingServiceOrderDBContext
+```
+
+Install dependencies
+
+```bash
+  dotnet restore --verbosity normal
+```
+
+Start the server
+
+```bash
+  dotnet run --project WebApiSO/WebApiSO.csproj
+```
+
+
 
