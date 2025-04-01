@@ -1,9 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FSA.Core.Server.Extensions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Globalization;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using WebApiSO.Data;
 
 namespace WebApiSO.Extension
 {
@@ -20,11 +23,12 @@ namespace WebApiSO.Extension
         {
             services.Configure();
             services.AddCorsServices();
-            services.AddSwaggerService();
+            //services.AddSwaggerService();
             services.AddLocalizationService();
             services.AddResponseCaching();
             services.AddHttpClient();
-            services.AddHttpContextResolverService();
+            //services.AddHttpContextResolverService();
+            //services.RegisterFSACoreServerServices(configuration);
 
             return services;
         }
@@ -36,14 +40,15 @@ namespace WebApiSO.Extension
         /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
         public static IServiceCollection Configure(this IServiceCollection services)
         {
-            services
-                .AddControllers()
-                .AddJsonOptions(options =>
-                {
-                    options.JsonSerializerOptions.PropertyNamingPolicy = null;
-                    //To avoid error likes this: "System.Text.Json.JsonException: A possible object cycle was detected."
-                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-                });
+            services.AddControllers(); //Endpoints creados en este proyecto
+            //.AddJsonOptions(options =>
+            //{
+            //    options.JsonSerializerOptions.PropertyNamingPolicy = null;
+            //    //To avoid error likes this: "System.Text.Json.JsonException: A possible object cycle was detected."
+            //    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            //});
+            services.AddAntiforgery();
+
             return services;
         }
 
@@ -104,12 +109,12 @@ namespace WebApiSO.Extension
         /// </summary>
         /// <param name="services">The service instance</param>
         /// <returns></returns>
-        public static IServiceCollection AddHttpContextResolverService(this IServiceCollection services)
-        {
-            services.AddHttpContextAccessor();
-            //services.AddTransient<IHttpContextResolverService, HttpContextResolverService>();
-            return services;
-        }
+        //public static IServiceCollection AddHttpContextResolverService(this IServiceCollection services)
+        //{
+        //    services.AddHttpContextAccessor();
+        //    //services.AddTransient<IHttpContextResolverService, HttpContextResolverService>();
+        //    return services;
+        //}
 
         /// <summary>
         /// <see cref="AddLocalizationService"/>: Add the corresponding localization to platform.
@@ -132,6 +137,28 @@ namespace WebApiSO.Extension
 
             CultureInfo.DefaultThreadCurrentCulture = culture;
             CultureInfo.DefaultThreadCurrentUICulture = culture;
+
+            return services;
+        }
+
+        /// <summary>
+        /// Method <see cref="RegisterFSACoreServerServices"/>: Extends <see cref="IServiceCollection"/> to registers FSA core server services to the API.
+        /// </summary>
+        /// <param name="services">IServiceCollection instance</param>
+        /// <param name="configuration">IConfiguration instance</param>
+        /// <returns>An instance of the <see cref="IServiceCollection"/> object.</returns>
+        public static IServiceCollection RegisterFSACoreServerServices(this IServiceCollection services, IConfiguration configuration)
+        {
+
+            services.AddFSACoreServerServices(configuration);
+            services.AddFSASwaggerDocumentationServices("FSA ServiceOrders Test Api", "v1");
+            services.AddFSAServiceOrderDbContext<AppDbContext>(options =>
+            {
+                options.UseSqlServer(configuration.GetConnectionString("DBConnection"));
+            });
+            services.AddFSAServiceOrderFeaturesServices();
+
+            //services.AddScoped<ManagementDatabaseSeeder>();
 
             return services;
         }
