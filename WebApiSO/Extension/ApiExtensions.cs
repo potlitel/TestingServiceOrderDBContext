@@ -1,12 +1,12 @@
-﻿using FSA.Core.Server.Extensions;
+﻿using FSA.Core.Data.Extensions;
+using FSA.Core.Server.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Globalization;
 using System.Reflection;
-using System.Text.Json.Serialization;
 using WebApiSO.Data;
+using static WebApiSO.Extension.DatabaseSeedersExtensions;
 
 namespace WebApiSO.Extension
 {
@@ -14,7 +14,7 @@ namespace WebApiSO.Extension
     {
 
         /// <summary>
-        /// <see cref="ConfigureApi"/>: Configure Api proyect.
+        /// Method <see cref="ConfigureApi"/>: Extends <see cref="IServiceCollection"/> to registers related seetings services to the API.
         /// </summary>
         /// <param name="services">The service instance</param>
         /// <param name="configuration">The configuration instance</param>
@@ -23,37 +23,28 @@ namespace WebApiSO.Extension
         {
             services.Configure();
             services.AddCorsServices();
-            //services.AddSwaggerService();
             services.AddLocalizationService();
-            services.AddResponseCaching();
-            services.AddHttpClient();
-            //services.AddHttpContextResolverService();
-            //services.RegisterFSACoreServerServices(configuration);
+            //services.AddHttpClient();
+            services.RegisterFSACoreServerServices(configuration);
 
             return services;
         }
 
         /// <summary>
-        /// <see cref="Configure"/>: Add the basic configurations.
+        /// Method <see cref="Configure"/>: Extends <see cref="IServiceCollection"/> to add the basic configurations to the API.
         /// </summary>
         /// <param name="services">The services</param>
         /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
         public static IServiceCollection Configure(this IServiceCollection services)
         {
             services.AddControllers(); //Endpoints creados en este proyecto
-            //.AddJsonOptions(options =>
-            //{
-            //    options.JsonSerializerOptions.PropertyNamingPolicy = null;
-            //    //To avoid error likes this: "System.Text.Json.JsonException: A possible object cycle was detected."
-            //    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-            //});
             services.AddAntiforgery();
-
+            services.AddResponseCaching();
             return services;
         }
 
         /// <summary>
-        /// Method <see cref="AddCorsServices"/>: Extends <see cref="IServiceCollection"/> to registers related seetings services to the Item API.
+        /// Method <see cref="AddCorsServices"/>: Extends <see cref="IServiceCollection"/> to registers related seetings services to the API.
         /// </summary>
         /// <param name="context">IServiceCollection instance</param>
         /// <returns>An instance of the <see cref="IServiceCollection"/> object.</returns>
@@ -76,45 +67,6 @@ namespace WebApiSO.Extension
 
             return services;
         }
-
-        /// <summary>
-        /// <see cref="AddSwaggerService"/>: Add configurations for the Swagger service.
-        /// </summary>
-        /// <param name="services">The services</param>
-        /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
-        public static IServiceCollection AddSwaggerService(this IServiceCollection services)
-        {
-            services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen(option =>
-            {
-                option.SwaggerDoc(
-                    "v1",
-                    new OpenApiInfo { Title = "Service Orders API", Version = "v1" }
-                );
-                option.TagActionsBy(api => new[] { api.GroupName });
-                option.DocInclusionPredicate((name, api) => true);
-                option.ExampleFilters();
-                // Set the comments path for the Swagger JSON and UI.
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                //option.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
-            });
-            services.AddSwaggerExamplesFromAssemblyOf<Program>();
-            return services;
-        }
-
-        /// <summary>
-        /// <see cref="AddHttpContextResolverService"/>: Responsible for implementing the IHttpContextResolverService interface, <br/>
-        /// declared in the Map.Application project.
-        /// </summary>
-        /// <param name="services">The service instance</param>
-        /// <returns></returns>
-        //public static IServiceCollection AddHttpContextResolverService(this IServiceCollection services)
-        //{
-        //    services.AddHttpContextAccessor();
-        //    //services.AddTransient<IHttpContextResolverService, HttpContextResolverService>();
-        //    return services;
-        //}
 
         /// <summary>
         /// <see cref="AddLocalizationService"/>: Add the corresponding localization to platform.
@@ -158,9 +110,36 @@ namespace WebApiSO.Extension
             });
             services.AddFSAServiceOrderFeaturesServices();
 
-            //services.AddScoped<ManagementDatabaseSeeder>();
+            services.AddScoped<ManagementDatabaseSeeder>();
 
             return services;
+        }
+
+        /// <summary>
+        /// Method <see cref="ConfigureServiceOrdersWebApp"/>: Extends <see cref="WebApplication"/> to registers FSA core server services to the API.
+        /// </summary>
+        /// <param name="app">WebApplication instances</param>
+        /// <returns>An instance of the <see cref="WebApplication"/> object.</returns>
+        public static WebApplication ConfigureServiceOrdersWebApp(this WebApplication app) {
+
+            app.UseSwagger();
+            app.UseSwaggerUI();
+
+            #region FSA CoreServer
+            //Run pending migrations.
+            app.Services.InitialiseDatabaseAsync<AppDbContext>().GetAwaiter().GetResult();
+            app.Services.SeedDataBaseBasicInfo().GetAwaiter().GetResult();
+            app.UseFSACoreServerServices();
+            app.MapControllers();//Register Local endpoints
+            app.MapFSAServiceOrderRoutes();
+
+            app.UseAntiforgery();
+            app.UseHttpsRedirection();
+            app.UseCors("WebApiCors");
+
+            #endregion
+
+            return app;
         }
     }
 }
