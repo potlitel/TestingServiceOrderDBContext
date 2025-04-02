@@ -1,5 +1,6 @@
 ﻿using FSA.Core.ServiceOrders.Models.Masters;
 using FSA.Core.Utils;
+using WebApiSO.Extension;
 
 namespace WebApiSO.Data.Seeders
 {
@@ -15,6 +16,9 @@ namespace WebApiSO.Data.Seeders
         {
             if (!context.ServiceOrderTaskStates.Any())
             {
+                //Auto-incrementing values ​​are reset.
+                context.DbccCheckIdent<ServiceOrderTaskState>(0);
+
                 var Date = DateTimeHelper.Now();
                 context.ServiceOrderTaskStates.AddRange(new List<ServiceOrderTaskState>()
                 {

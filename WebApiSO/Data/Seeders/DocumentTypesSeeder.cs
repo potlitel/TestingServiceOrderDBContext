@@ -1,5 +1,7 @@
 ﻿using FSA.Core.ServiceOrders.Models.Masters;
 using FSA.Core.Utils;
+using System.Xml.Linq;
+using WebApiSO.Extension;
 
 namespace WebApiSO.Data.Seeders
 {
@@ -15,6 +17,9 @@ namespace WebApiSO.Data.Seeders
         {
             if (!context.DocumentTypes.Any())
             {
+                //Auto-incrementing values ​​are reset.
+                context.DbccCheckIdent<DocumentType>(0);
+
                 var Date = DateTimeHelper.Now();
                 context.DocumentTypes.AddRange(new List<DocumentType>()
                 {

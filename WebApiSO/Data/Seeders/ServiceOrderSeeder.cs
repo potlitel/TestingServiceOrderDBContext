@@ -1,4 +1,6 @@
-﻿using FSA.Core.Utils;
+﻿using FSA.Core.ServiceOrders.Models.Masters;
+using FSA.Core.Utils;
+using WebApiSO.Extension;
 using WebApiSO.Models;
 
 namespace WebApiSO.Data.Seeders
@@ -15,6 +17,9 @@ namespace WebApiSO.Data.Seeders
         {
             if (!context.ServiceOrders.Any())
             {
+                //Auto-incrementing values ​​are reset.
+                context.DbccCheckIdent<CustomServiceOrder>(0);
+
                 var Date = DateTimeHelper.Now();
                 var rand = new Random();
                 var uid = rand.Next(10, 80);
