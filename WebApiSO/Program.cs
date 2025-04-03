@@ -1,8 +1,3 @@
-using FSA.Core.Data.Extensions;
-using FSA.Core.Server.Extensions;
-using WebApiSO.Data;
-using WebApiSO.Extension;
-
 var builder = WebApplication.CreateBuilder(args);
 
 #region NotWorkging

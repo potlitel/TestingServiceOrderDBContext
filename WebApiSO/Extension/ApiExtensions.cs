@@ -1,14 +1,4 @@
-﻿using FSA.Core.Data.Extensions;
-using FSA.Core.Server.Extensions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Filters;
-using System.Globalization;
-using System.Reflection;
-using WebApiSO.Data;
-using static WebApiSO.Extension.DatabaseSeedersExtensions;
-
-namespace WebApiSO.Extension
+﻿namespace WebApiSO.Extension
 {
     public static class ApiExtensions
     {
@@ -102,13 +92,14 @@ namespace WebApiSO.Extension
         public static IServiceCollection RegisterFSACoreServerServices(this IServiceCollection services, IConfiguration configuration)
         {
 
-            services.AddFSACoreServerServices(configuration);
-            services.AddFSASwaggerDocumentationServices("FSA ServiceOrders Test Api", "v1");
+            services.AddFSACoreServerServices(configuration);//failed on docker deployment
+            services.AddFSASwaggerDocumentationServices("FSA ServiceOrders Test Api", "v1");//failed on docker deployment
+            //failed on docker deployment
             services.AddFSAServiceOrderDbContext<AppDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("DBConnection"));
             });
-            services.AddFSAServiceOrderFeaturesServices();
+            services.AddFSAServiceOrderFeaturesServices();//failed on docker deployment
 
             services.AddScoped<ManagementDatabaseSeeder>();
 
@@ -129,9 +120,9 @@ namespace WebApiSO.Extension
             //Run pending migrations.
             app.Services.InitialiseDatabaseAsync<AppDbContext>().GetAwaiter().GetResult();
             app.Services.SeedDataBaseBasicInfo().GetAwaiter().GetResult();
-            app.UseFSACoreServerServices();
+            app.UseFSACoreServerServices();//failed on docker deployment
             app.MapControllers();//Register Local endpoints
-            app.MapFSAServiceOrderRoutes();
+            app.MapFSAServiceOrderRoutes();//failed on docker deployment
 
             app.UseAntiforgery();
             app.UseHttpsRedirection();
