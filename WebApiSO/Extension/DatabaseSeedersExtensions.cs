@@ -41,6 +41,7 @@ namespace WebApiSO.Extension
                     await ServiceOrderTypesSeeder.AddServiceOrderTypes(context);
                     await SupplyOperationsSeeder.AddSupplyOperations(context);
                     await ServiceOrderSeeder.AddServicesOrders(context);
+                    await ServiceOrderTaskSeeder.AddServiceOrderTasks(context);
                 }
                 catch (Exception ex)
                 {

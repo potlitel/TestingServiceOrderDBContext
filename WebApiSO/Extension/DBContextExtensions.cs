@@ -1,5 +1,7 @@
 ﻿using FSA.Core.BaseEntities;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Data.Common;
 using System.Data.Entity;
 
 //using System.Data.Entity.Core.Objects;
@@ -49,5 +51,46 @@ namespace WebApiSO.Extension
 
             return tableName!;
         }
+
+        /// <summary>
+        /// Method <see cref="CountByRawSql"/>: Extends <see cref="DbContext"/> to get the total number of entities in a list.
+        /// https://medium.com/@dmitrysikorsky/entity-framework-core-count-by-sql-query-6ac12557dfaa
+        /// </summary>
+        /// <param name="context">DbContext instance</param>
+        /// <param name="sql">T-sql query</param>
+        /// <param name="parameters">Extra params</param>
+        /// <returns></returns>
+        public static int CountByRawSql(this DbContext dbContext, string sql, KeyValuePair<string, object>[] parameters = null!)
+        {
+            int result = -1;
+            SqlConnection? connection = dbContext.Database.GetDbConnection() as SqlConnection;
+
+            try
+            {
+                connection!.Open();
+
+                using SqlCommand command = connection.CreateCommand();
+                command.CommandText = sql;
+
+                if (parameters is not null)
+                    foreach (KeyValuePair<string, object> parameter in parameters)
+                        command.Parameters.AddWithValue(parameter.Key, parameter.Value);
+
+                using DbDataReader dataReader = command.ExecuteReader();
+                if (dataReader.HasRows)
+                    while (dataReader.Read())
+                        result = dataReader.GetInt32(0);
+            }
+
+            // We should have better error handling here
+            catch (System.Exception ex) {
+                throw ex.InnerException!;
+            }
+
+            finally { connection!.Close(); }
+
+            return result;
+        }
+
     }
 }
