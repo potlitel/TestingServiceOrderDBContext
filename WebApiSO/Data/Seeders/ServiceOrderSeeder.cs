@@ -30,29 +30,32 @@ namespace WebApiSO.Data.Seeders
                 foreach (var obsrv in SampleData.Observations)
                 {
                     foreach (var addr in SampleData.Address)
-                    {    
-                        context.ServiceOrders.AddRange(new List<CustomServiceOrder>()
+                    {
+                        if (!context.ServiceOrders.Any(so => so.Observations == obsrv))
                         {
-                            #region ItemsToAdd
-                            new CustomServiceOrder(){
-                                Number = Guid.NewGuid().ToString(),
-                                EstimatedEndingDate = Date.AddDays(uid),
-                                Observations = obsrv,
-                                Address = addr,
-                                OwnerId = randomLong,
-                                ExecutorId = randomLong,
-                                ServiceOrderTypeId = rand.Next(1, itemsCountSOType),
-                                CustomField = rand.Next(10, 80),
-                                IsActive = true,
-                                CreatedAt = Date,
-                                UpdatedAt = Date
-                            }
-                            #endregion
-                        });
+
+                            await context.ServiceOrders.AddAsync(
+                                new CustomServiceOrder()
+                                {
+                                    Number = Guid.NewGuid().ToString(),
+                                    EstimatedEndingDate = Date.AddDays(uid),
+                                    Observations = obsrv,
+                                    Address = addr,
+                                    OwnerId = randomLong,
+                                    ExecutorId = randomLong,
+                                    ServiceOrderTypeId = rand.Next(1, itemsCountSOType),
+                                    CustomField = rand.Next(10, 80),
+                                    IsActive = true,
+                                    CreatedAt = Date,
+                                    UpdatedAt = Date
+                                }
+                                );
+                            await context.SaveChangesAsync();
+                        }
+                        else
+                            break;
                     }
                 }
-
-                await context.SaveChangesAsync();
             }
         }
     }
