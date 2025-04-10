@@ -64,8 +64,9 @@ namespace WebApiSO.Data.Seeders
             await context.ServiceOrders.AddAsync(
                                             new CustomServiceOrder()
                                             {
-                                                Number = Guid.NewGuid().ToString(),
-                                                EstimatedEndingDate = Date.AddDays(uid),
+                                                Number = $"SO_{DateTimeHelper.Now().ToString("O")}",
+                                                //EstimatedEndingDate = Date.AddDays(uid),
+                                                EstimatedEndingDate = DateTimeHelper.Now().AddDays(15),
                                                 Observations = obsrv,
                                                 Address = addr,
                                                 OwnerId = randomLong,
