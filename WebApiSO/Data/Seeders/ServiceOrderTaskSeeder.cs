@@ -72,7 +72,7 @@ namespace WebApiSO.Data.Seeders
                 };
 
                 //Auto-incrementing values ​​are reset for ServiceOrderTask entity.
-                context.DbccCheckIdent<ServiceOrderTask>(0);
+                context.DbccCheckIdent<ServiceOrderTask>(1);
                 var itemsCountSO = context.CountByRawSql("SELECT COUNT(*) FROM ServiceOrders");
                 var itemsCountSOTS = context.CountByRawSql("SELECT COUNT(*) FROM ServiceOrderTaskStates");
                 var rand = new Random();

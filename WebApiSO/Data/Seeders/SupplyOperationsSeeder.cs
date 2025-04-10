@@ -17,7 +17,7 @@ namespace WebApiSO.Data.Seeders
             if (!context.SupplyOperations.Any())
             {
                 //Auto-incrementing values ​​are reset.
-                context.DbccCheckIdent<SupplyOperation>(0);
+                context.DbccCheckIdent<SupplyOperation>(1);
 
                 var Date = DateTimeHelper.Now();
                 context.SupplyOperations.AddRange(new List<SupplyOperation>()

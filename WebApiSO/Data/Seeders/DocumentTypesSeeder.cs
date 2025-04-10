@@ -17,7 +17,7 @@ namespace WebApiSO.Data.Seeders
             if (!context.DocumentTypes.Any())
             {
                 //Auto-incrementing values ​​are reset.
-                context.DbccCheckIdent<DocumentType>(0);
+                context.DbccCheckIdent<DocumentType>(1);
                 var Date = DateTimeHelper.Now();
 
                 foreach (var desc in SampleData.Descriptions)

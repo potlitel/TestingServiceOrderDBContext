@@ -17,7 +17,7 @@ namespace WebApiSO.Data.Seeders
             if (!context.ServiceOrderTaskStates.Any())
             {
                 //Auto-incrementing values ​​are reset.
-                context.DbccCheckIdent<ServiceOrderTaskState>(0);
+                context.DbccCheckIdent<ServiceOrderTaskState>(1);
 
                 var Date = DateTimeHelper.Now();
                 context.ServiceOrderTaskStates.AddRange(new List<ServiceOrderTaskState>()

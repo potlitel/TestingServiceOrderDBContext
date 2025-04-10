@@ -17,7 +17,7 @@ namespace WebApiSO.Data.Seeders
             if (!context.ServiceOrders.Any())
             {
                 //Auto-incrementing values ​​are reset.
-                context.DbccCheckIdent<CustomServiceOrder>(0);
+                context.DbccCheckIdent<CustomServiceOrder>(1);
 
                 var Date = DateTimeHelper.Now();
                 var rand = new Random();
