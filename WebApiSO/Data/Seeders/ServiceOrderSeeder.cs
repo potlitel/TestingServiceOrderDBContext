@@ -25,38 +25,59 @@ namespace WebApiSO.Data.Seeders
 
                 var itemsCountSOType = context.CountByRawSql("SELECT COUNT(*) FROM ServiceOrderTypes");
 
-                long randomLong = (uid * 2);
-
-                foreach (var obsrv in SampleData.Observations)
+                for (int i = 0; i < SampleData.Observations.Count; i++)
                 {
-                    foreach (var addr in SampleData.Address)
+                    for (int j = 0; j < SampleData.Address.Count; j++)
                     {
-                        if (!context.ServiceOrders.Any(so => so.Observations == obsrv))
-                        {
+                        string currentObs = SampleData.Observations[i]; 
+                        string currentAddress = SampleData.Address[j];
+                        long randomLong = (uid * j+1);
 
-                            await context.ServiceOrders.AddAsync(
-                                new CustomServiceOrder()
-                                {
-                                    Number = Guid.NewGuid().ToString(),
-                                    EstimatedEndingDate = Date.AddDays(uid),
-                                    Observations = obsrv,
-                                    Address = addr,
-                                    OwnerId = randomLong,
-                                    ExecutorId = randomLong,
-                                    ServiceOrderTypeId = rand.Next(1, itemsCountSOType),
-                                    CustomField = rand.Next(10, 80),
-                                    IsActive = true,
-                                    CreatedAt = Date,
-                                    UpdatedAt = Date
-                                }
-                                );
-                            await context.SaveChangesAsync();
-                        }
-                        else
-                            break;
+                        if (!context.ServiceOrders.Any(so => so.Observations == currentObs))
+                            if (!context.ServiceOrders.Any(so => so.Address == currentAddress))
+                                await AddServiceOrder(context, Date, rand, uid, itemsCountSOType,
+                                                      randomLong, currentObs, currentAddress);
+                            else
+                                j++;
+                        i++;
                     }
                 }
+
             }
+        }
+
+        /// <summary>
+        /// Method <see cref="AddServiceOrder"/>: Add new service order item.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="Date"></param>
+        /// <param name="rand"></param>
+        /// <param name="uid"></param>
+        /// <param name="itemsCountSOType"></param>
+        /// <param name="randomLong"></param>
+        /// <param name="obsrv"></param>
+        /// <param name="addr"></param>
+        /// <returns>An instance of the <see cref="Task"/> object.</returns>
+        private static async Task AddServiceOrder(AppDbContext context, DateTime Date, Random rand, int uid, int itemsCountSOType,
+                                                  long randomLong, string obsrv, string addr)
+        {
+            await context.ServiceOrders.AddAsync(
+                                            new CustomServiceOrder()
+                                            {
+                                                Number = Guid.NewGuid().ToString(),
+                                                EstimatedEndingDate = Date.AddDays(uid),
+                                                Observations = obsrv,
+                                                Address = addr,
+                                                OwnerId = randomLong,
+                                                ExecutorId = randomLong,
+                                                ServiceOrderTypeId = rand.Next(1, itemsCountSOType),
+                                                CustomField = rand.Next(10, 80),
+                                                IsActive = true,
+                                                CreatedAt = Date,
+                                                UpdatedAt = Date
+                                            }
+                                            );
+            await context.SaveChangesAsync();
         }
     }
 }
