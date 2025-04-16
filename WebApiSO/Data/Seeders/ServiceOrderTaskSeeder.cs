@@ -85,7 +85,7 @@ namespace WebApiSO.Data.Seeders
                     {
                         new CustomServiceOrderTask(){
                             Observations = item.ToString(),
-                            ExecutionDate = Date,
+                            ExecutionDate = Date.AddDays(rand.Next(1, itemsCountSO)*2),
                             ServiceOrderTaskStateId = rand.Next(1, itemsCountSOTS),
                             ServiceOrderId = rand.Next(1, itemsCountSO),
                             CustomFieldSOTask = Guid.NewGuid().ToString(),
