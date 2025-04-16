@@ -30,7 +30,6 @@ namespace WebApiSO.Features.ServiceOrderRegisters
 
 
             var entityList = await repository.Entity<ServiceOrderRegister>()
-                                             //.Include(item => item.ServiceOrder)
                                              .Where(t => t.ServiceOrderId == id)
                                              .ToListAsync();
 

@@ -136,6 +136,11 @@ namespace WebApiSO.Extension
             return app;
         }
 
+        /// <summary>
+        /// Method <see cref="AddFeaturesHandlers"/>: Extends <see cref="IServiceCollection"/> to registers all services handlers to the API.
+        /// </summary>
+        /// <param name="app">IServiceCollection instances</param>
+        /// <returns>An instance of the <see cref="IServiceCollection"/> object.</returns>
         private static IServiceCollection AddFeaturesHandlers(this IServiceCollection services)
         {
             var currentAssembly = Assembly.GetExecutingAssembly();
@@ -146,9 +151,9 @@ namespace WebApiSO.Extension
 
             var handlers = currentAssembly
                 .GetTypes()
-                .Where(t => t.GetInterfaces().Any(i =>
-                    i.IsGenericType
-                    && (i.GetGenericTypeDefinition() == handlerType || i.GetGenericTypeDefinition() == handlerTypeRequest || i.GetGenericTypeDefinition() == handlerTypeResponse)));
+                .Where(t => t.GetInterfaces().Any(i =>i.IsGenericType
+                                                  && (i.GetGenericTypeDefinition() == handlerType || i.GetGenericTypeDefinition() == handlerTypeRequest 
+                                                  || i.GetGenericTypeDefinition() == handlerTypeResponse)));
 
             foreach (var handler in handlers)
             {

@@ -7,7 +7,7 @@ using WebApiSO.Features.ServiceOrderTasks.GetAll;
 namespace WebApiSO.Controllers.ServiceOrderTasks
 {
     [ApiController]
-    [ApiExplorerSettings(GroupName = "Service Orders: Tasks")]
+    [ApiExplorerSettings(GroupName = "Services Orders: Tasks")]
     [Route("api/so/tasks/all")]
     public class GetAllServiceOrderTasks : ControllerBase
     {
