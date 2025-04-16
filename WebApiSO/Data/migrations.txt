@@ -1,0 +1,11 @@
+﻿All from cmd
+
+1-dotnet-ef migrations add AddCustomServiceOrderRegisterEntity -p WebApiSO -c AppDbContext -o Data/Migrations (OK)
+2-dotnet-ef database update -c AppDbContext -p WebApiSO (OK)
+
+Para eliminar BD (from PMC): Drop-Database -p WebApiSO -Context AppDbContext.
+Para actualizar la estructura de la BD (from PMC): Update-Database -p WebApiSO -c AppDbContext
+
+Update-Database -p WebApiSO -Context AppDbContext
+dotnet ef database update -p FSA.Map.WebApi -s FSA.Map.WebApi
+Drop-Database -p FSA.Map.WebApi -s FSA.Map.WebApi -Context MapsConfigsContext*/

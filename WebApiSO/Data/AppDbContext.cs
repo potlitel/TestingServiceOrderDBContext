@@ -24,6 +24,16 @@ namespace WebApiSO.Data
             modelBuilder.Entity<CustomServiceOrder>(e =>
             {
             });
+
+            modelBuilder.Entity<CustomServiceOrderRegister>(e =>
+            {
+            });
+
+            //modelBuilder.Entity<CustomServiceOrderRegister>()
+            //.HasOne(c => c.ServiceOrder)
+            //.WithMany(c => c.)
+            //.HasForeignKey(c => c.SpeakerId)
+            //.OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

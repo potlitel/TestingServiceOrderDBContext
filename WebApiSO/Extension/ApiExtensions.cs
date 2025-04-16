@@ -1,4 +1,7 @@
-﻿namespace WebApiSO.Extension
+﻿using FSA.Core.Interfaces;
+using System.Reflection;
+
+namespace WebApiSO.Extension
 {
     public static class ApiExtensions
     {
@@ -16,7 +19,7 @@
             services.AddLocalizationService();
             //services.AddHttpClient();
             services.RegisterFSACoreServerServices(configuration);
-
+            services.AddFeaturesHandlers();
             return services;
         }
 
@@ -131,6 +134,28 @@
             #endregion
 
             return app;
+        }
+
+        private static IServiceCollection AddFeaturesHandlers(this IServiceCollection services)
+        {
+            var currentAssembly = Assembly.GetExecutingAssembly();
+
+            var handlerType = typeof(IServiceHandler<,>);
+            var handlerTypeRequest = typeof(IServiceHandlerWithoutRequest<>);
+            var handlerTypeResponse = typeof(IServiceHandlerWithoutResponse<>);
+
+            var handlers = currentAssembly
+                .GetTypes()
+                .Where(t => t.GetInterfaces().Any(i =>
+                    i.IsGenericType
+                    && (i.GetGenericTypeDefinition() == handlerType || i.GetGenericTypeDefinition() == handlerTypeRequest || i.GetGenericTypeDefinition() == handlerTypeResponse)));
+
+            foreach (var handler in handlers)
+            {
+                services.AddScoped(handler);
+            }
+
+            return services;
         }
     }
 }
