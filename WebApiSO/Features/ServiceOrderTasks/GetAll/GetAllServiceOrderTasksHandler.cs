@@ -6,6 +6,7 @@ using FSA.Core.ServiceOrders.Models;
 using FSA.Core.Utils;
 using System.Linq.Dynamic.Core;
 using WebApiSO.Data.Dtos;
+using WebApiSO.Models;
 
 namespace WebApiSO.Features.ServiceOrderTasks.GetAll
 {
@@ -22,16 +23,16 @@ namespace WebApiSO.Features.ServiceOrderTasks.GetAll
         {
             pagination = Pagination.Create(pagination);
 
-            var entity = repository.Entity<ServiceOrderTask>();
+            var entity = repository.Entity<CustomServiceOrderTask>();
 
             entity = Search(entity, pagination);
 
-            var result = entity.ApplyPagination(pagination).ToDynamicList<ServiceOrderTask>().Select(ServiceOrderTaskDto.ToDto).ToList();
+            var result = entity.ApplyPagination(pagination).ToDynamicList<CustomServiceOrderTask>().Select(ServiceOrderTaskDto.ToDto).ToList();
 
             return Result<IEnumerable<ServiceOrderTaskDto>>.SuccessWith(result, pagination, CustomStatusCode.StatusOk);
         }
 
-        private IQueryable<ServiceOrderTask> Search(IQueryable<ServiceOrderTask> query, Pagination pagination)
+        private IQueryable<CustomServiceOrderTask> Search(IQueryable<CustomServiceOrderTask> query, Pagination pagination)
         {
             if (!string.IsNullOrEmpty(pagination.FilterTerm))
                 return query.Where(q => q.Observations!.Contains(pagination.FilterTerm));

@@ -1,6 +1,7 @@
 ﻿using FSA.Core.Dtos;
 using FSA.Core.ServiceOrders.Dtos;
 using FSA.Core.ServiceOrders.Models;
+using WebApiSO.Models;
 
 namespace WebApiSO.Data.Dtos
 {
@@ -12,6 +13,7 @@ namespace WebApiSO.Data.Dtos
         public long ServiceOrderTaskStateId { get; set; }
         public virtual ServiceOrderTaskStateDto? ServiceOrderTaskState { get; set; }
         public long ServiceOrderId { get; set; }
+        public string CustomFieldSOTask { get; set; }
         public virtual ServiceOrderDto? ServiceOrder { get; set; }
         //public virtual IEnumerable<SupplyDto> Supplies { get; set; } = [];
         //public virtual IEnumerable<ServiceOrderTaskDocumentDto> Documents { get; set; } = [];
@@ -31,7 +33,7 @@ namespace WebApiSO.Data.Dtos
             //Documents = dto.Documents;
         }
 
-        public static ServiceOrderTaskDto ToDto(ServiceOrderTask entity)
+        public static ServiceOrderTaskDto ToDto(CustomServiceOrderTask entity)
         {
             if (entity is null)
                 return null!;
@@ -46,6 +48,7 @@ namespace WebApiSO.Data.Dtos
                 ExecutionDate = entity.ExecutionDate,
                 ServiceOrderTaskStateId = entity.ServiceOrderTaskStateId,
                 ServiceOrderId = entity.ServiceOrderId,
+                CustomFieldSOTask = entity.CustomFieldSOTask
                 //Supplies = (ICollection<SupplyDto>)entity.Supplies,
                 //Documents = (ICollection<ServiceOrderTaskDocumentDto>)entity.Documents
             };

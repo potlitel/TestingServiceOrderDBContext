@@ -3,6 +3,7 @@ using FSA.Core.Dtos;
 using FSA.Core.Interfaces;
 using FSA.Core.ServiceOrders.Models;
 using WebApiSO.Data.Dtos;
+using WebApiSO.Models;
 
 namespace WebApiSO.Features.ServiceOrderTasks.GetById
 {
@@ -22,7 +23,7 @@ namespace WebApiSO.Features.ServiceOrderTasks.GetById
         /// <returns>An instance of the <see cref="Task"/> object.</returns>
         public async Task<Result<ServiceOrderTaskDto>> Handle(long id)
         {
-            var entity = await repository.GetByIdAsync<ServiceOrderTask>(id);
+            var entity = await repository.GetByIdAsync<CustomServiceOrderTask>(id);
 
             if (entity is null)
                 return Result<ServiceOrderTaskDto>.Failure([$"{typeof(ServiceOrderTaskDto).Name} Not Found"], CustomStatusCode.StatusNotFound);
