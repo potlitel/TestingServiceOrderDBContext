@@ -1,7 +1,6 @@
 ﻿using FSA.Core.DataTypes;
 using FSA.Core.Dtos;
 using FSA.Core.Interfaces;
-using FSA.Core.ServiceOrders.Models;
 using WebApiSO.Data.Dtos;
 using WebApiSO.Models;
 
