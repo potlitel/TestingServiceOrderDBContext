@@ -9,15 +9,8 @@ namespace WebApiSO.Controllers.ServiceOrderTasks
     [ApiController]
     [ApiExplorerSettings(GroupName = "Services Orders: Tasks")]
     [Route("api/so/tasks/")]
-    public class CreateServiceOrderTask : ControllerBase
+    public class CreateServiceOrderTask(CreateServiceOrderTaskHandler handler) : ControllerBase
     {
-        CreateServiceOrderTaskHandler handler;
-
-        public CreateServiceOrderTask(CreateServiceOrderTaskHandler handler)
-        {
-            this.handler = handler;
-        }
-
         [HttpPost]
         public async Task<Result<ServiceOrderTaskDto>> Create(CreateServiceOrderTasksRequest request, CancellationToken cancellationToken)
         {

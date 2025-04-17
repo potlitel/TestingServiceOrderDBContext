@@ -30,19 +30,21 @@ namespace WebApiSO.Features.ServiceOrderTasks.Create
     public class CreateServiceOrderTaskHandler : IServiceHandler<CreateServiceOrderTasksRequest, ServiceOrderTaskDto>
     {
         private readonly IRepository repository;
-        //private readonly IValidator<CreateServiceOrderTasksRequest> validator;
+        private readonly IValidator<CreateServiceOrderTasksRequest> validator;
 
-        public CreateServiceOrderTaskHandler([FromKeyedServices("SO_Repository")] IRepository repository)
+        public CreateServiceOrderTaskHandler([FromKeyedServices("SO_Repository")] IRepository repository, 
+                                             IValidator<CreateServiceOrderTasksRequest> validator)
         {
             this.repository = repository;
-            //this.validator = validator;
+            this.validator = validator;
+            this.validator = validator;
         }
 
         public async Task<Result<ServiceOrderTaskDto>> Handle(CreateServiceOrderTasksRequest request)
         {
-            //var model = validator.Validate(request);
-            //if (!model.IsValid)
-            //    return Result<ServiceOrderTaskDto>.Failure(model.Errors.Select(e => e.ErrorMessage), CustomStatusCode.StatusBadRequest);
+            var model = validator.Validate(request);
+            if (!model.IsValid)
+                return Result<ServiceOrderTaskDto>.Failure(model.Errors.Select(e => e.ErrorMessage), CustomStatusCode.StatusBadRequest);
 
             List<string> errors = [];
             if (!repository.Exist<ServiceOrderTaskState>(request.ServiceOrderTaskStateId))

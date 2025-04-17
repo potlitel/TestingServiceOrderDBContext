@@ -9,15 +9,8 @@ namespace WebApiSO.Controllers.ServiceOrderTasks
     [ApiController]
     [ApiExplorerSettings(GroupName = "Services Orders: Tasks")]
     [Route("api/so/tasks/all")]
-    public class GetAllServiceOrderTasks : ControllerBase
+    public class GetAllServiceOrderTasks(GetAllServiceOrderTasksHandler handler) : ControllerBase
     {
-        GetAllServiceOrderTasksHandler handler;
-
-        public GetAllServiceOrderTasks(GetAllServiceOrderTasksHandler handler)
-        {
-            this.handler = handler;
-        }
-
         [HttpPost]
         public async Task<Result<IEnumerable<ServiceOrderTaskDto>>> GetAll(Pagination? request, CancellationToken cancellationToken)
         {

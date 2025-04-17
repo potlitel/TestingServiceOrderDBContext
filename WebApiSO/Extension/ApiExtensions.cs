@@ -1,4 +1,6 @@
-﻿using FSA.Core.Interfaces;
+﻿using FluentValidation;
+using FSA.Core.Interfaces;
+using FSA.Core.Server;
 using System.Reflection;
 
 namespace WebApiSO.Extension
@@ -17,9 +19,9 @@ namespace WebApiSO.Extension
             services.Configure();
             services.AddCorsServices();
             services.AddLocalizationService();
-            //services.AddHttpClient();
             services.RegisterFSACoreServerServices(configuration);
             services.AddFeaturesHandlers();
+            services.AddFluentValidatorServices();
             return services;
         }
 
@@ -139,7 +141,7 @@ namespace WebApiSO.Extension
         /// <summary>
         /// Method <see cref="AddFeaturesHandlers"/>: Extends <see cref="IServiceCollection"/> to registers all services handlers to the API.
         /// </summary>
-        /// <param name="app">IServiceCollection instances</param>
+        /// <param name="services">IServiceCollection instances</param>
         /// <returns>An instance of the <see cref="IServiceCollection"/> object.</returns>
         private static IServiceCollection AddFeaturesHandlers(this IServiceCollection services)
         {
@@ -159,6 +161,19 @@ namespace WebApiSO.Extension
             {
                 services.AddScoped(handler);
             }
+
+            return services;
+        }
+
+        /// <summary>
+        /// Method <see cref="AddFluentValidatorServices"/>: Extends <see cref="IServiceCollection"/> to registers all validators to the API.
+        /// </summary>
+        /// <param name="services">IServiceCollection instances</param>
+        /// <returns>An instance of the <see cref="IServiceCollection"/> object.</returns>
+        private static IServiceCollection AddFluentValidatorServices(this IServiceCollection services)
+        {
+            var assembly = typeof(WebApiSOAssembly).Assembly;
+            services.AddValidatorsFromAssembly(assembly);
 
             return services;
         }
