@@ -1,6 +1,11 @@
 ﻿using FSA.Core.DataTypes;
 using FSA.Core.Dtos;
+using FSA.Core.Extensions;
 using FSA.Core.Interfaces;
+using FSA.Core.ServiceOrders.Dtos;
+using FSA.Core.ServiceOrders.Models;
+using FSA.Core.Utils;
+using System.Linq.Dynamic.Core;
 using WebApiSO.Data.Dtos;
 using WebApiSO.Models;
 
@@ -22,13 +27,31 @@ namespace WebApiSO.Features.ServiceOrderTasks.GetBySOId
         /// <returns>An instance of the <see cref="Task"/> object.</returns>
         public async Task<Result<IEnumerable<ServiceOrderTaskDto>>> Handle(long id)
         {
-            var entity = repository.Entity<CustomServiceOrderTask>().Where(e => e.ServiceOrderId == id).ToList();
+            Pagination pagination = new Pagination(10);
 
-            var result = entity.Select(ServiceOrderTaskDto.ToDto);
+            List<string> errors = [];
+            if (!repository.Exist<ServiceOrderRegister>(id))
+                errors.Add($"{typeof(ServiceOrderRegister).Name} not found");
+
+            if (errors.Count > 0)
+                return Result<IEnumerable<ServiceOrderTaskDto>>.Failure(errors, CustomStatusCode.StatusBadRequest);
+
+            var entity = repository.Entity<CustomServiceOrderTask>().Where(e => e.ServiceOrderId == id);
+
+            entity = Search(entity, pagination);
+
+            var result = entity.ApplyPagination(pagination).ToDynamicList<CustomServiceOrderTask>().Select(ServiceOrderTaskDto.ToDto).ToList();
 
             await Task.FromResult(result);
 
-            return Result<IEnumerable<ServiceOrderTaskDto>>.SuccessWith(result!, CustomStatusCode.StatusOk);
+            return Result<IEnumerable<ServiceOrderTaskDto>>.SuccessWith(result!, pagination, CustomStatusCode.StatusOk);
+        }
+
+        private IQueryable<CustomServiceOrderTask> Search(IQueryable<CustomServiceOrderTask> query, Pagination pagination)
+        {
+            if (!string.IsNullOrEmpty(pagination.FilterTerm))
+                return query.Where(q => q.Observations!.Contains(pagination.FilterTerm));
+            return query;
         }
     }
 }
