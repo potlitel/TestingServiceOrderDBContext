@@ -1,5 +1,8 @@
 ﻿using WebApiSO.Data;
 using WebApiSO.Data.Seeders;
+using WebApiSO.Data.Seeders.ServiceOrderDocuments;
+using WebApiSO.Data.Seeders.ServiceOrderTasksDocuments;
+using WebApiSO.Data.Seeders.Supplies;
 
 namespace WebApiSO.Extension
 {
@@ -42,6 +45,9 @@ namespace WebApiSO.Extension
                     await SupplyOperationsSeeder.AddSupplyOperations(context);
                     await ServiceOrderSeeder.AddServicesOrders(context);
                     await ServiceOrderTaskSeeder.AddServiceOrderTasks(context);
+                    await ServiceOrderDocumentsSeeder.AddServiceOrderDocuments(context);
+                    await ServiceOrderTasksDocumentsSeeder.AddServiceOrderTasksDocuments(context);
+                    await SuppliesSeeder.AddServiceOrderSupplies(context);
                 }
                 catch (Exception ex)
                 {
