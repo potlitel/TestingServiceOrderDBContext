@@ -27,8 +27,8 @@ namespace WebApiSO.Features.ServiceOrderRegisters
             Pagination pagination = new Pagination(10);
 
             List<string> errors = [];
-            if (!repository.Exist<ServiceOrderRegister>(id))
-                errors.Add($"{typeof(ServiceOrderRegister).Name} not found");
+            if (!repository.Exist<ServiceOrder>(id))
+                errors.Add($"{typeof(ServiceOrder).Name} not found");
 
             if (errors.Count > 0)
                 return Result<IEnumerable<ServiceOrderRegisterDto>>.Failure(errors, CustomStatusCode.StatusBadRequest);
