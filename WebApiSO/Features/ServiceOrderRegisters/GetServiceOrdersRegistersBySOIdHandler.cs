@@ -1,12 +1,14 @@
-﻿using FSA.Core.DataTypes;
+﻿using FSA.Core.BaseEntities;
+using FSA.Core.DataTypes;
 using FSA.Core.Dtos;
 using FSA.Core.Extensions;
 using FSA.Core.Interfaces;
+using FSA.Core.ServiceOrders.Dtos;
 using FSA.Core.ServiceOrders.Models;
 using FSA.Core.Utils;
 using System.Linq.Dynamic.Core;
 using WebApiSO.Data.Dtos;
-using WebApiSO.Models;
+using ServiceOrderRegisterDto = WebApiSO.Data.Dtos.ServiceOrderRegisterDto;
 
 namespace WebApiSO.Features.ServiceOrderRegisters
 {
@@ -33,22 +35,32 @@ namespace WebApiSO.Features.ServiceOrderRegisters
             if (errors.Count > 0)
                 return Result<IEnumerable<ServiceOrderRegisterDto>>.Failure(errors, CustomStatusCode.StatusBadRequest);
 
-
             var entityList = repository.Entity<ServiceOrderRegister>().Where(t => t.ServiceOrderId == id);
 
             entityList = Search(entityList, pagination);
 
-            //await appDbContext.Entry(entityList)
-            //                  .Reference(e => e.ServiceOrder)
-            //                  .LoadAsync();
-
-            //var dependencides = await appDbContext.ServiceOrderRegisters.Where(e => e.ServiceOrderId == id)
-            //                          .GetDependedDataFromEntriesAsync(appDbContext);
-
-            //var result = entityList.Select(ServiceOrderRegisterDto.ToDto);
             var result = entityList.ApplyPagination(pagination).ToDynamicList<ServiceOrderRegister>().Select(ServiceOrderRegisterDto.ToDto).ToList();
+            
+            await AttachRelatedObject(id, result);
 
             return Result<IEnumerable<ServiceOrderRegisterDto>>.SuccessWith(result!, pagination, CustomStatusCode.StatusOk);
+        }
+
+        /// <summary>
+        /// https://medium.com/@sunside/converting-between-types-in-increasingly-absurd-ways-89414ae6eb7c
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        private async Task AttachRelatedObject(long id, List<ServiceOrderRegisterDto> result)
+        {
+            //Get ServiceOrder objecto to attach to response
+            var entityExtra = await repository.GetByIdAsync<ServiceOrder>(id);
+
+            foreach (var item in result)
+            {
+                item.ServiceOrder = ServiceOrderDto.ToDto(entityExtra);
+            }
         }
 
         private IQueryable<ServiceOrderRegister> Search(IQueryable<ServiceOrderRegister> query, Pagination pagination)
