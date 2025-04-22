@@ -8,6 +8,7 @@ using FSA.Core.ServiceOrders.Models;
 using FSA.Core.Utils;
 using System.Linq.Dynamic.Core;
 using WebApiSO.Data.Dtos;
+//using ServiceOrderDto = WebApiSO.Data.Dtos.ServiceOrderDto;
 using ServiceOrderRegisterDto = WebApiSO.Data.Dtos.ServiceOrderRegisterDto;
 
 namespace WebApiSO.Features.ServiceOrderRegisters
@@ -59,7 +60,7 @@ namespace WebApiSO.Features.ServiceOrderRegisters
 
             foreach (var item in result)
             {
-                item.ServiceOrder = ServiceOrderDto.ToDto(entityExtra);
+                item.ServiceOrder = CustomServiceOrderDto.ToDto(entityExtra);
             }
         }
 

@@ -10,7 +10,8 @@ namespace WebApiSO.Data.Dtos
         public string StateFrom { get; set; } = string.Empty;
         public string StateTo { get; set; } = string.Empty;
         public string? Observations { get; set; }
-        public virtual ServiceOrderDto? ServiceOrder { get; set; }
+        //public virtual CustomServiceOrderDto ServiceOrder { get; set; } = null!;
+        public virtual CustomServiceOrderDto? ServiceOrder { get; set; }
         public long ServiceOrderId { get; set; }
 
         public static ServiceOrderRegisterDto ToDto(ServiceOrderRegister entity)
