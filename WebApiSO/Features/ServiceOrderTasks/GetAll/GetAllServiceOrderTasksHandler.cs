@@ -34,6 +34,7 @@ namespace WebApiSO.Features.ServiceOrderTasks.GetAll
 
             var result = entity.ApplyPagination(pagination).ToDynamicList<CustomServiceOrderTask>().Select(ServiceOrderTaskDto.ToDto).ToList();
 
+            
             foreach (var item in result) {
                 item.ServiceOrder = ServiceOrderDto.ToDto(await extraEntitySO.FirstOrDefaultAsync(so => so.Id == item.ServiceOrderId));
                 item.ServiceOrderTaskState = ServiceOrderTaskStateDto.ToDto(await extraEntityStates.FirstOrDefaultAsync(so => so.Id == item.ServiceOrderTaskStateId));

@@ -4,6 +4,7 @@ using FSA.Core.Extensions;
 using FSA.Core.Interfaces;
 using FSA.Core.ServiceOrders.Dtos;
 using FSA.Core.ServiceOrders.Models;
+using FSA.Core.ServiceOrders.Models.Masters;
 using FSA.Core.Utils;
 using System.Linq.Dynamic.Core;
 using WebApiSO.Data.Dtos;
@@ -37,10 +38,19 @@ namespace WebApiSO.Features.ServiceOrderTasks.GetBySOId
                 return Result<IEnumerable<ServiceOrderTaskDto>>.Failure(errors, CustomStatusCode.StatusBadRequest);
 
             var entity = repository.Entity<CustomServiceOrderTask>().Where(e => e.ServiceOrderId == id);
+            var extraEntitySO = await repository.GetByIdAsync<ServiceOrder>(id);
+
+            var extraEntityStates = repository.Entity<ServiceOrderTaskState>();
 
             entity = Search(entity, pagination);
 
             var result = entity.ApplyPagination(pagination).ToDynamicList<CustomServiceOrderTask>().Select(ServiceOrderTaskDto.ToDto).ToList();
+
+            foreach (var item in result)
+            {
+                item.ServiceOrder = ServiceOrderDto.ToDto(extraEntitySO);
+                item.ServiceOrderTaskState = ServiceOrderTaskStateDto.ToDto(await extraEntityStates.FirstOrDefaultAsync(so => so.Id == item.ServiceOrderTaskStateId));
+            }
 
             await Task.FromResult(result);
 
