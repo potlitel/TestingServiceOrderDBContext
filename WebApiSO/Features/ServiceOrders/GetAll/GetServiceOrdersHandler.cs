@@ -8,6 +8,7 @@ using FSA.Core.ServiceOrders.Models.Masters;
 using FSA.Core.Utils;
 using System.Linq.Dynamic.Core;
 using WebApiSO.Data.Dtos;
+using ServiceOrderRegisterDto = WebApiSO.Data.Dtos.ServiceOrderRegisterDto;
 
 namespace WebApiSO.Features.ServiceOrders.GetAll
 {
@@ -27,6 +28,7 @@ namespace WebApiSO.Features.ServiceOrders.GetAll
             var entity = repository.Entity<ServiceOrder>();
             var extraEntitySO = repository.Entity<ServiceOrder>();
             var types = repository.Entity<ServiceOrderType>();
+            var registers = repository.Entity<ServiceOrderRegister>();
 
             entity = Search(entity, pagination);
 
@@ -38,6 +40,7 @@ namespace WebApiSO.Features.ServiceOrders.GetAll
             {
                 item.ServiceOrderType = ServiceOrderTypeDto.ToDto(await types.FirstOrDefaultAsync(t => t.Id == item.ServiceOrderTypeId));
                 item.ParentServiceOrder = ServiceOrderDto.ToDto(await extraEntitySO.FirstOrDefaultAsync(so => so.Id == item.ParentServiceOrderId));
+                item.Registers = registers.Where(reg => reg.ServiceOrderId == item.Id).Select(ServiceOrderRegisterDto.ToDto).ToList();
 
                 newList.Add(item);
             }

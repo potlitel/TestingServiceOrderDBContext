@@ -17,6 +17,11 @@ namespace WebApiSO.Data.Dtos
         public long ServiceOrderTypeId { get; set; }
         public virtual ServiceOrderTypeDto? ServiceOrderType { get; set; }
 
+        public virtual ICollection<ServiceOrderDocumentDto> Documents { get; set; } = [];
+        public virtual ICollection<ServiceOrderTaskDto> Tasks { get; set; } = [];
+        public virtual ICollection<ServiceOrderRegisterDto> Registers { get; set; } = [];
+        public virtual ICollection<ServiceOrderFeatureDto> Features { get; set; } = [];
+
         public CustomServiceOrderDto()
         {
             
