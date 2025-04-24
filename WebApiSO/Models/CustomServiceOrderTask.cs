@@ -16,7 +16,7 @@ namespace WebApiSO.Models
         /// <param name="CustomFieldSOTask"></param>
         /// <returns></returns>
         public static CustomServiceOrderTask Create(string? Observations, DateTime ExecutionDate, long ServiceOrderTaskStateId,
-                                                    long ServiceOrderId, string CustomFieldSOTask)
+                                                    long ServiceOrderId, string? CustomFieldSOTask)
         {
             return new CustomServiceOrderTask
             {
@@ -37,7 +37,7 @@ namespace WebApiSO.Models
         /// <param name="customFieldSOTask"></param>
         /// <param name="isActive"></param>
         public virtual void Update(string? observations, DateTime executionDate, long serviceOrderTaskStateId,
-                                   string customFieldSOTask, bool isActive)
+                                   string? customFieldSOTask, bool isActive)
         {
             Observations = observations;
             ExecutionDate = executionDate;

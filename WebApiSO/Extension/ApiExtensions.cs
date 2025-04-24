@@ -32,6 +32,9 @@ namespace WebApiSO.Extension
         /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
         public static IServiceCollection Configure(this IServiceCollection services)
         {
+            //https://stackoverflow.com/questions/72980204/asp-net-core-6-0-web-api-error-status-400-title-one-or-more-validation-errors
+            //services.AddControllers(
+            //    options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true); //Endpoints creados en este proyecto
             services.AddControllers(); //Endpoints creados en este proyecto
             services.AddAntiforgery();
             services.AddResponseCaching();

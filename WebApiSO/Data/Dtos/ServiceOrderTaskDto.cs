@@ -9,7 +9,6 @@ namespace WebApiSO.Data.Dtos
     {
         public string? Observations { get; set; }
         public DateTime ExecutionDate { get; set; }
-
         public long ServiceOrderTaskStateId { get; set; }
         public virtual ServiceOrderTaskStateDto? ServiceOrderTaskState { get; set; }
         public long ServiceOrderId { get; set; }
@@ -25,10 +24,14 @@ namespace WebApiSO.Data.Dtos
 
         public ServiceOrderTaskDto(ServiceOrderTaskDto dto)
         {
+            Id = dto.Id;
+            CreatedAt = dto.CreatedAt;
+            UpdatedAt = dto.UpdatedAt;
             Observations = dto.Observations;
             ExecutionDate = dto.ExecutionDate;
             ServiceOrderTaskStateId = dto.ServiceOrderTaskStateId;
             ServiceOrderId = dto.ServiceOrderId;
+            CustomFieldSOTask = dto.CustomFieldSOTask;
             //Supplies = dto.Supplies;
             //Documents = dto.Documents;
         }

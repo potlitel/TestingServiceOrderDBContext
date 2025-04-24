@@ -37,7 +37,6 @@ namespace WebApiSO.Features.ServiceOrderTasks.Create
         {
             this.repository = repository;
             this.validator = validator;
-            this.validator = validator;
         }
 
         public async Task<Result<ServiceOrderTaskDto>> Handle(CreateServiceOrderTasksRequest request)

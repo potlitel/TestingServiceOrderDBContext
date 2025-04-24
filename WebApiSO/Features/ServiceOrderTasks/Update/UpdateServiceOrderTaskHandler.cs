@@ -2,9 +2,6 @@
 using FSA.Core.DataTypes;
 using FSA.Core.Dtos;
 using FSA.Core.Interfaces;
-using FSA.Core.ServiceOrders.Features.Requests;
-using FSA.Core.ServiceOrders.Models;
-using WebApiSO.Features.ServiceOrderTasks.Create;
 using WebApiSO.Models;
 
 namespace WebApiSO.Features.ServiceOrderTasks.Update
