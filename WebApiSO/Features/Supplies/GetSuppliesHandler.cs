@@ -26,6 +26,7 @@ namespace WebApiSO.Features.Supplies
             pagination = Pagination.Create(pagination);
 
             var entity = repository.Entity<Supply>();
+            var serviceOrders = repository.Entity<ServiceOrder>();
             var supplyOperations = repository.Entity<SupplyOperation>();
             var serviceOrderTasks = repository.Entity<CustomServiceOrderTask>();
 
@@ -39,6 +40,7 @@ namespace WebApiSO.Features.Supplies
             {
                 item.SupplyOperation = SupplyOperationDto.ToDto(await supplyOperations.FirstOrDefaultAsync(so => so.Id == item.SupplyOperationId));
                 item.ServiceOrderTask = ServiceOrderTaskDto.ToDto(await serviceOrderTasks.FirstOrDefaultAsync(so => so.Id == item.ServiceOrderTaskId));
+                item.ServiceOrderTask.ServiceOrder = ServiceOrderDto.ToDto(await serviceOrders.FirstOrDefaultAsync(so => so.Id == item.ServiceOrderTask.ServiceOrderId));
                 newList.Add(item);
             }
 
