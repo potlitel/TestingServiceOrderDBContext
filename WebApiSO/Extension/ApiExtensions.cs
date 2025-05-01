@@ -3,6 +3,7 @@ using FSA.Core.Interfaces;
 using FSA.Core.Server;
 using FSA.Core.Server.ServiceOrders.Implementations;
 using System.Reflection;
+using WebApiSO.Implementations;
 
 namespace WebApiSO.Extension
 {
@@ -21,8 +22,14 @@ namespace WebApiSO.Extension
             services.AddCorsServices();
             services.AddLocalizationService();
             services.RegisterFSACoreServerServices(configuration);
+
+            services.AddScoped<ISOAzureStorageManagerFactory, ServicesOrdersAzureStorageManagerFactory>();
+            services.AddScoped<IAzureStorageManager, SODocumentsAzureStorageManager>();
+
             services.AddFeaturesHandlers();
             services.AddFluentValidatorServices();
+
+
             return services;
         }
 
