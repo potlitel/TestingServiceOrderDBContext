@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using FSA.Core.Interfaces;
 using FSA.Core.Server;
+using FSA.Core.Server.ServiceOrders.Implementations;
 using System.Reflection;
 
 namespace WebApiSO.Extension
