@@ -21,11 +21,19 @@ namespace WebApiSO.Features.ServiceOrderDocuments.Download
         private readonly IValidator<DownloadServiceOrderDocumentRequest> validator;
         private readonly IAzureStorageManager azureStorageManager;
 
+        private readonly BlobServiceClient _blobClient;
+        private readonly BlobContainerClient _containerClient;
+        const string ContainerName = "sodocuments";
+
         public DownloadServiceOrderDocumentHandler(IValidator<DownloadServiceOrderDocumentRequest> validator,
                                                    ISOAzureStorageManagerFactory azureStorageManagerFactory)
         {
             this.validator = validator;
             this.azureStorageManager = azureStorageManagerFactory.GetAzureStorageManager(SOAzureStorageContainers.SERVICE_ORDER_SERVICE_CONTAINER);
+
+            _blobClient = new BlobServiceClient("UseDevelopmentStorage=true");
+            _containerClient = _blobClient.GetBlobContainerClient(ContainerName);
+            _containerClient.CreateIfNotExists();
         }
 
         public async Task<Result<Stream>> Handle(DownloadServiceOrderDocumentRequest request)
@@ -34,16 +42,17 @@ namespace WebApiSO.Features.ServiceOrderDocuments.Download
             if (!model.IsValid)
                 return (Result<Stream>)Result.Failure(model.Errors.Select(e => e.ErrorMessage), CustomStatusCode.StatusBadRequest);
 
-            // Create a BlobClient using the blob URL (with SAS token if needed)
-            //var blobClient = new BlobClient(new Uri(blobUrl));
-
-            //// Download the blob content
-            //var downloadInfo = await blobClient.DownloadAsync();
-
+            #region Working 
+            //https://www.c-sharpcorner.com/article/mastering-azure-blob-storage-with-asp-net-core-mvc/
+            var blobClient = _containerClient.GetBlobClient(request.blobName);
+            var ms = new MemoryStream();
+            blobClient.DownloadTo(ms);
+            ms.Position = 0;
+            #endregion
 
             var result = await azureStorageManager.DownloadDocumentAsync(request.blobName);
 
-            return Result<Stream>.SuccessWith(result, null!, CustomStatusCode.StatusOk);
+            return Result<Stream>.SuccessWith(ms, null!, CustomStatusCode.StatusOk);
         }
     }
 }
