@@ -48,7 +48,7 @@ namespace WebApiSO.Features.ServiceOrderTasks.GetBySOId
 
             foreach (var item in result)
             {
-                item.ServiceOrder = ServiceOrderDto.ToDto(extraEntitySO);
+                item.ServiceOrder = CustomServiceOrderDto.ToDto(extraEntitySO);
                 item.ServiceOrderTaskState = ServiceOrderTaskStateDto.ToDto(await extraEntityStates.FirstOrDefaultAsync(so => so.Id == item.ServiceOrderTaskStateId));
             }
 

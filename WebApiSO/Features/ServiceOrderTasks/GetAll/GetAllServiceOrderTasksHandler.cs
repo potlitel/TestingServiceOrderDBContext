@@ -36,7 +36,7 @@ namespace WebApiSO.Features.ServiceOrderTasks.GetAll
 
             
             foreach (var item in result) {
-                item.ServiceOrder = ServiceOrderDto.ToDto(await extraEntitySO.FirstOrDefaultAsync(so => so.Id == item.ServiceOrderId));
+                item.ServiceOrder = CustomServiceOrderDto.ToDto(await extraEntitySO.FirstOrDefaultAsync(so => so.Id == item.ServiceOrderId));
                 item.ServiceOrderTaskState = ServiceOrderTaskStateDto.ToDto(await extraEntityStates.FirstOrDefaultAsync(so => so.Id == item.ServiceOrderTaskStateId));
             }
 

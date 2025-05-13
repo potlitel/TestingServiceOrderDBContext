@@ -13,6 +13,11 @@ namespace WebApiSO.Data
         {
         }
 
+        public AppDbContext()
+        {
+            
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CustomServiceOrderTask>();

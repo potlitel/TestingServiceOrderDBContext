@@ -13,7 +13,7 @@ namespace WebApiSO.Data.Dtos
         public virtual ServiceOrderTaskStateDto? ServiceOrderTaskState { get; set; }
         public long ServiceOrderId { get; set; }
         public string CustomFieldSOTask { get; set; }
-        public virtual ServiceOrderDto? ServiceOrder { get; set; }
+        public virtual CustomServiceOrderDto? ServiceOrder { get; set; }
         //public virtual IEnumerable<SupplyDto> Supplies { get; set; } = [];
         //public virtual IEnumerable<ServiceOrderTaskDocumentDto> Documents { get; set; } = [];
 
