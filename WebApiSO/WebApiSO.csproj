@@ -27,4 +27,8 @@
     <None Include="C:\Users\potli\source\repos\ServiceOrders\ServiceOrders\WebApiSO\.editorconfig" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="K6\SmokeTestings\" />
+  </ItemGroup>
+
 </Project>

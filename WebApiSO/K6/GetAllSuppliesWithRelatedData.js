@@ -1,3 +1,6 @@
+//https://dev.to/nadirbasalamah/api-performance-testing-with-k6-a-quick-start-guide-2ngc
+
+
 import http from 'k6/http';
 import { sleep } from 'k6';
 
